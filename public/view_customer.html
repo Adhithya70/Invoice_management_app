@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Customer Invoices</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>View Invoices of a Customer</h1>
+    <input type="number" id="customerId" placeholder="Enter Customer ID" required>
+    <button id="fetchInvoices">Get Invoices</button>
+
+    <h2>Invoices</h2>
+    <table id="invoicesTable">
+        <thead>
+            <tr>
+                <th>Invoice ID</th>
+                <th>Invoice Date</th>
+                <th>Item ID</th>
+                <th>Item Name</th>
+                <th>Item Quantity</th>
+                <th>Item Price</th>
+            </tr>
+        </thead>
+        <tbody id="invoicesTableBody"></tbody>
+    </table>
+
+    <script>
+        document.getElementById('fetchInvoices').addEventListener('click', function() {
+            const customerId = document.getElementById('customerId').value;
+
+            fetch(`/customerInvoices/${customerId}`)
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById('invoicesTableBody');
+                tbody.innerHTML = ''; // Clear previous results
+
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6">No invoices found for this customer.</td></tr>';
+                    return;
+                }
+
+                data.forEach(invoice => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${invoice.invoice_id}</td>
+                        <td>${invoice.invoice_date}</td>
+                        <td>${invoice.item_id || 'N/A'}</td>
+                        <td>${invoice.item_name || 'N/A'}</td>
+                        <td>${invoice.item_quantity || 'N/A'}</td>
+                        <td>${invoice.item_price || 'N/A'}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            })
+            .catch(err => console.error('Error:', err));
+        });
+    </script>
+</body>
+</html>

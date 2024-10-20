@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Invoice</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Add Invoice</h1>
+    <form id="addInvoiceForm">
+        <input type="number" id="customer_id" placeholder="Customer ID" required><br>
+        <input type="date" id="invoice_date" placeholder="Invoice Date" required><br>
+        <button type="submit">Add Invoice</button>
+    </form>
+
+    <script>
+        document.getElementById('addInvoiceForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const invoice = {
+                customer_id: document.getElementById('customer_id').value,
+                invoice_date: document.getElementById('invoice_date').value,
+            };
+
+            fetch('/addInvoice', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(invoice)
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(err => console.error('Error:', err));
+        });
+    </script>
+</body>
+</html>

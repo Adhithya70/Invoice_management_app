@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Customer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Add Customer</h1>
+    <form id="addCustomerForm">
+        <input type="text" id="name" placeholder="Customer Name" required><br>
+        <input type="email" id="email" placeholder="Customer Email"><br>
+        <input type="text" id="phone" placeholder="Customer Phone"><br>
+        <textarea id="address" placeholder="Customer Address"></textarea><br>
+        <button type="submit">Add Customer</button>
+    </form>
+
+    <script>
+        document.getElementById('addCustomerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const customer = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+            };
+
+            fetch('/addCustomer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(customer)
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(err => console.error('Error:', err));
+        });
+    </script>
+</body>
+</html>

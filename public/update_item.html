@@ -1,0 +1,50 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update item</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<form id="updateItemForm">
+    <input id="item_id" value="" placeholder="Item id"><br>
+    <input type="number" id="invoice_id" placeholder="Invoice ID" required><br>
+    <input type="text" id="item_name" placeholder="Item Name" required><br>
+    <input type="number" id="item_quantity" placeholder="Item Quantity" required><br>
+    <input type="number" id="item_price" placeholder="Item Price" ><br>
+    <button type="submit">Update Item</button>
+</form>
+
+<script>
+    document.getElementById('updateItemForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const itemId = document.getElementById('item_id').value;
+        const updatedItem = {
+            invoice_id: document.getElementById('invoice_id').value,
+            item_name: document.getElementById('item_name').value,
+            item_quantity: document.getElementById('item_quantity').value,
+            item_price: document.getElementById('item_price').value,
+        };
+
+        fetch(`/updateItem/${itemId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedItem)
+        })
+        .then(response => response.json())
+        .then(data => alert(data.message))
+        .catch(err => console.error('Error:', err));
+    });
+
+    // Fetch item data to populate the form
+    const itemId = 1;  // replace with dynamic item ID
+    fetch(`/viewItem/${itemId}`)
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('item_id').value = data.id;
+        document.getElementById('invoice_id').value = data.invoice_id;
+        document.getElementById('item_name').value = data.item_name;
+        document.getElementById('item_quantity').value = data.item_quantity;
+        document.getElementById('item_price').value = data.item_price;
+    });
+</script>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Customers</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Customer List</h1>
+    <table id="customersTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+            </tr>
+        </thead>
+        <tbody id="customersTableBody"></tbody>
+    </table>
+
+    <script>
+        
+    function deleteCustomer(id) {
+        fetch(`/deleteCustomer/${id}`, {
+            method: 'DELETE',
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            // Reload or refresh the table after deletion
+            location.reload();
+        })
+        .catch(err => console.error('Error:', err));
+    }
+
+    fetch('/listCustomers')
+    .then(response => response.json())
+    .then(data => {
+        const tbody = document.getElementById('customersTableBody');
+        data.forEach(customer => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${customer.id}</td>
+                <td>${customer.name}</td>
+                <td>${customer.email}</td>
+                <td>${customer.phone}</td>
+                <td>${customer.address}</td>
+                <td><button onclick="deleteCustomer(${customer.id})">Delete</button></td>
+            `;
+            tbody.appendChild(row);
+        });
+    })
+    .catch(err => console.error('Error:', err));
+    </script>
+</body>
+</html>
+
+
+

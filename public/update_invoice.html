@@ -1,0 +1,45 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Invoice</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<form id="updateInvoiceForm">
+    <input type="number" id="invoice_id" value="" placeholder="invoice id"  required><br>
+    <input type="number" id="customer_id" placeholder="Customer ID" required><br>
+    <input type="date" id="invoice_date" placeholder="Invoice Date" required><br>
+    <button type="submit">Update Invoice</button>
+</form>
+
+<script>
+    document.getElementById('updateInvoiceForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const invoiceId = document.getElementById('invoice_id').value;
+        const updatedInvoice = {
+            customer_id: document.getElementById('customer_id').value,
+            invoice_date: document.getElementById('invoice_date').value,
+        };
+
+        fetch(`/updateInvoice/${invoiceId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedInvoice)
+        })
+        .then(response => response.json())
+        .then(data => alert(data.message))
+        .catch(err => console.error('Error:', err));
+    });
+
+    // Fetch invoice data to populate the form
+    const invoiceId = 1;  // replace with dynamic invoice ID
+    fetch(`/viewInvoice/${invoiceId}`)
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('invoice_id').value = data.id;
+        document.getElementById('customer_id').value = data.customer_id;
+        document.getElementById('invoice_date').value = data.invoice_date;
+    });
+</script>

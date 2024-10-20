@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Invoices</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Invoice List</h1>
+    <table id="invoicesTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Customer ID</th>
+                <th>Invoice Date</th>
+            </tr>
+        </thead>
+        <tbody id="invoicesTableBody"></tbody>
+    </table>
+
+    <script>
+        function deleteInvoice(id) {
+            fetch(`/deleteInvoice/${id}`, {
+                method: 'DELETE',
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                // Reload or refresh the table after deletion
+                location.reload();
+            })
+            .catch(err => console.error('Error:', err));
+        }
+    
+        fetch('/listInvoices')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById('invoicesTableBody');
+            data.forEach(invoice => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${invoice.id}</td>
+                    <td>${invoice.customer_id}</td>
+                    <td>${invoice.invoice_date}</td>
+                    <td><button onclick="deleteInvoice(${invoice.id})">Delete</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        })
+        .catch(err => console.error('Error:', err));
+    </script>
+</body>
+</html>
+
+
+

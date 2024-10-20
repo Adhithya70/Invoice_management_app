@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Item to Invoice</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Add Item to Invoice</h1>
+    <form id="addItemForm">
+        <input type="number" id="invoice_id" placeholder="Invoice ID" required><br>
+        <input type="text" id="item_name" placeholder="Item Name" required><br>
+        <input type="number" id="item_quantity" placeholder="Item Quantity" required><br>
+        <input type="number" id="item_price" placeholder="Item Price" required step="0.01"><br>
+        <button type="submit">Add Item</button>
+    </form>
+
+    <script>
+        document.getElementById('addItemForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const item = {
+                invoice_id: document.getElementById('invoice_id').value,
+                item_name: document.getElementById('item_name').value,
+                item_quantity: document.getElementById('item_quantity').value,
+                item_price: document.getElementById('item_price').value,
+            };
+
+            fetch('/addItem', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(item)
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(err => console.error('Error:', err));
+        });
+    </script>
+</body>
+</html>
